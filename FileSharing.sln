@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31410.223
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileSharing", "FileSharing\FileSharing.csproj", "{3226EABC-3856-43BD-A7BC-0D95176FF84D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3226EABC-3856-43BD-A7BC-0D95176FF84D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3226EABC-3856-43BD-A7BC-0D95176FF84D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3226EABC-3856-43BD-A7BC-0D95176FF84D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3226EABC-3856-43BD-A7BC-0D95176FF84D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {788C0E67-63CE-4BB8-93E7-758C32AB9FA9}
+	EndGlobalSection
+EndGlobal
