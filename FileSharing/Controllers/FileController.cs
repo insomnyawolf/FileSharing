@@ -16,16 +16,23 @@ namespace Capitales.Controllers
     [Route("api/[controller]/")]
     public class FileController : BaseController
     {
-        private static readonly FileExtensionContentTypeProvider FileExtensionContentTypeProvider = new FileExtensionContentTypeProvider();
+        private static readonly FileExtensionContentTypeProvider FileExtensionContentTypeProvider = InitializeFileExtensionContentTypeProvider();
+
+        private static FileExtensionContentTypeProvider InitializeFileExtensionContentTypeProvider()
+        {
+            var FileExtensionContentTypeProvider = new FileExtensionContentTypeProvider();
+            FileExtensionContentTypeProvider.Mappings.Add(".flac", "audio/flac");
+            return FileExtensionContentTypeProvider;
+        }
+
         private static readonly char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
         private static readonly string InvalidFileNameCharsString = string.Join(' ', InvalidFileNameChars);
-        private readonly string FilePath;
-        private readonly int MaxResults;
+        private readonly string FilePath = ConfigurationManager.AppSettings.FilePath;
+        private readonly int MaxResults = ConfigurationManager.AppSettings.MaxResultsInIndex;
 
         public FileController(ILogger<FileController> Logger) : base(Logger)
         {
-            FilePath = ConfigurationManager.AppSettings.FilePath;
-            MaxResults = ConfigurationManager.AppSettings.MaxResultsInIndex;
+
         }
 
         [HttpGet(nameof(Info))]
@@ -114,8 +121,11 @@ namespace Capitales.Controllers
 
         private static string GetContentType(string filename)
         {
-            FileExtensionContentTypeProvider.TryGetContentType(filename, out string contentType);
-            return contentType ?? "application/octet-stream";
+            if(!FileExtensionContentTypeProvider.TryGetContentType(filename, out string contentType))
+            {
+                return "application/octet-stream";
+            }
+            return contentType;
         }
 
         [HttpPost(nameof(Upload))]
