@@ -4,7 +4,7 @@
   "newProjectRoot": "projects",
   "projects": {
     "FileSharing": {
-      "root": "",
+      "root": "src",
       "sourceRoot": "src",
       "projectType": "application",
       "prefix": "app",
@@ -126,7 +126,7 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**"]
+            "exclude": [ "**/node_modules/**" ]
           }
         }
       }
