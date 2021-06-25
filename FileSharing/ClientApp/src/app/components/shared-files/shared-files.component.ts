@@ -22,9 +22,17 @@ export class SharedFilesComponent implements OnInit, AfterViewInit {
   constructor(fileService: FileService, @Inject(DOCUMENT) document: Document) {
     this.fileService = fileService;
     this.document = document;
-    this.previewEnabled = true;
+
     this.searchQueryFilename = '';
     this.searchQueryPage = 1;
+
+    let previewEnabled = localStorage.getItem('previewEnabled');
+    if (previewEnabled === null) {
+      previewEnabled = 'true';
+      localStorage.setItem('previewEnabled', previewEnabled);
+    }
+
+    this.previewEnabled = previewEnabled === 'true';
   }
 
   ngOnInit() {
@@ -43,11 +51,13 @@ export class SharedFilesComponent implements OnInit, AfterViewInit {
     this.searchQueryFilename = newValue;
     this.searchQueryPage = 1;
     this.refresh();
+
   }
 
   // Need to guess the kind of this event
   togglePreview(targetElement) {
     this.previewEnabled = targetElement.target.checked;
+    localStorage.setItem('previewEnabled', `${this.previewEnabled}`);
   }
 
   // Doesn't work yet
