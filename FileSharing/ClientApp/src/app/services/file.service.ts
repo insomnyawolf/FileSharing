@@ -14,14 +14,14 @@ export class FileService {
   constructor(httpClient: HttpClient, @Inject('API_URL') baseUrl: string)
   {
     this.httpClient = httpClient;
-    this.apiUrl = baseUrl + '/Files';
+    this.apiUrl = baseUrl + '/File';
   }
 
   getFileInfo(filename: string, pageNumber: number): Observable<PagedResult<SharedFile>> {
 
-    const params = new HttpParams();
-    params.set('filename', filename);
-    params.set('page', pageNumber.toString());
+    const params = new HttpParams()
+    .set('filename', filename)
+    .set('page', pageNumber.toString());
 
     return this.httpClient.get<PagedResult<SharedFile>>(this.apiUrl + '/Info', { params });
   }

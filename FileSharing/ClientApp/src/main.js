@@ -10,7 +10,7 @@ function getBaseUrl() {
 }
 exports.getBaseUrl = getBaseUrl;
 function getApiUrl() {
-    return getBaseUrl() + '/api';
+    return getBaseUrl() + 'api';
 }
 exports.getApiUrl = getApiUrl;
 var providers = [

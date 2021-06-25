@@ -1,4 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
+import { SharedFile } from '../../../models/sharedfile';
+
+export enum MultimediaType {
+  None,
+  Audio,
+  Video,
+  Image,
+}
 
 @Component({
   selector: 'app-file',
@@ -6,10 +14,44 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./file.component.css']
 })
 export class FileComponent implements OnInit {
+  private apiUrl: string;
 
-  constructor() { }
+  @Input()
+  file: SharedFile;
+  @Input()
+  preview: boolean;
+
+  fileUrl: string;
+
+  mediaType: MultimediaType;
+  multimediaType: typeof MultimediaType = MultimediaType;
+  constructor(@Inject('API_URL') baseUrl: string)
+  {
+    this.apiUrl = baseUrl;
+  }
 
   ngOnInit() {
+
+    const mediatype = this.file.contentType.split('/')[0].toLowerCase();
+    switch (mediatype) {
+      case 'audio':
+        this.mediaType = MultimediaType.Audio;
+        break;
+      case 'video':
+        this.mediaType = MultimediaType.Video;
+        break;
+      case 'image':
+        this.mediaType = MultimediaType.Image;
+        break;
+      default:
+        this.mediaType = MultimediaType.None;
+        break;
+    }
+
+    this.fileUrl = `${this.apiUrl}/File/Download?filename=${this.file.url}`;
+    console.log(this.fileUrl);
   }
 
 }
+
+

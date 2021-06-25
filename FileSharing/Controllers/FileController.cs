@@ -92,8 +92,8 @@ namespace Capitales.Controllers
             };
         }
 
-        [HttpGet(nameof(Get))]
-        public IActionResult Get([FromQuery] string filename = null)
+        [HttpGet(nameof(Download))]
+        public IActionResult Download([FromQuery] string filename = null)
         {
             if (string.IsNullOrEmpty(filename))
             {
@@ -107,9 +107,9 @@ namespace Capitales.Controllers
                 return NotFound();
             }
 
-            var fileStream = System.IO.File.Open(destination, FileMode.Open);
+            var fileStream = System.IO.File.Open(destination, FileMode.Open, FileAccess.Read, FileShare.Read);
 
-            return File(fileStream: fileStream, contentType: GetContentType(filename), enableRangeProcessing: true/*, fileDownloadName: filename*/); // returns a FileStreamResult
+            return File(fileStream: fileStream, contentType: GetContentType(filename), enableRangeProcessing: true, fileDownloadName: filename); // returns a FileStreamResult
         }
 
         private static string GetContentType(string filename)

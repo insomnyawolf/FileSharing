@@ -9,7 +9,7 @@ export function getBaseUrl() {
 }
 
 export function getApiUrl() {
-  return getBaseUrl() + '/api';
+  return getBaseUrl() + 'api';
 }
 
 

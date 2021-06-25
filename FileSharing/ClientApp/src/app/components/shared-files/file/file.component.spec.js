@@ -1,18 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var testing_1 = require("@angular/core/testing");
-var upload_file_component_1 = require("./upload-file.component");
-describe('UploadFileComponent', function () {
+var file_component_1 = require("./file.component");
+describe('FileComponent', function () {
     var component;
     var fixture;
     beforeEach(testing_1.waitForAsync(function () {
         testing_1.TestBed.configureTestingModule({
-            declarations: [upload_file_component_1.UploadFileComponent]
+            declarations: [file_component_1.FileComponent]
         })
             .compileComponents();
     }));
     beforeEach(function () {
-        fixture = testing_1.TestBed.createComponent(upload_file_component_1.UploadFileComponent);
+        fixture = testing_1.TestBed.createComponent(file_component_1.FileComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
@@ -20,4 +20,4 @@ describe('UploadFileComponent', function () {
         expect(component).toBeTruthy();
     });
 });
-//# sourceMappingURL=upload-file.component.spec.js.map
+//# sourceMappingURL=file.component.spec.js.map

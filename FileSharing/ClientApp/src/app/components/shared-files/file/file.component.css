@@ -1,0 +1,22 @@
+.videoInsert {
+  min-width: 100%;
+  min-height: 100%;
+  width: 100%;
+  height: 100%;
+}
+
+div.audio-wrapper {
+}
+
+  div.audio-wrapper > audio {
+    width: 100%;
+  }
+
+div.visible-media-wrapper {
+  height: 50vh;
+}
+
+  div.visible-media-wrapper > img {
+    max-width: 100%;
+    max-height: 100%;
+  }

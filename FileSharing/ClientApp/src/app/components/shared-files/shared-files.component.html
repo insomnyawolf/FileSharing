@@ -1,1 +1,17 @@
-<p>shared-files works!</p>
+<div>
+  <div class="search-container">
+    <input type="text" class="search col-12 col-sm-12 col-md-10 col-lg-10" (change)="changeSearch($event)" (keyup)="changeSearch($event)"/>
+    <button class="search col-12 col-sm-12 col-md-2 col-lg-2 btn btn-primary" type="button" (click)="refresh()">Refresh</button>
+    <div class="search col-12 col-sm-12 col-md-2 col-lg-2">
+      <input id="togglePreviewCheckbox" type="checkbox" [checked]="previewEnabled" (change)="togglePreview($event)" />
+      <label for="togglePreviewCheckbox">ShowPreview</label>
+    </div>
+  </div>
+
+  <h2 *ngIf="files === undefined || files.length == 0">Nothing but dust here</h2>
+
+  <div class="dynamic-table-container">
+    <app-file [file]="file" [preview]="previewEnabled" *ngFor="let file of files" class="cell card search col-12"></app-file>
+    <button (click)="scrollTop()" class="go-top-button">Go back to the begining</button>
+  </div>
+</div>

@@ -1,0 +1,41 @@
+div.card-border {
+  border: 1px solid;
+  border-radius: 3px;
+}
+
+div.dynamic-table-container {
+  display: flex;
+  flex-flow: wrap;
+}
+
+    div.dynamic-table-container > div.cell > * {
+      width: 100%;
+      height: 100%;
+    }
+
+button.go-top-button {
+    position: fixed;
+    bottom: 20px;
+    right:30px;
+    z-index: 3;
+    padding: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+div.search {
+    display:inline-block;
+    margin: 10px;
+}
+
+div.search {
+  display: inline-block;
+  margin: 10px;
+}
+
+div.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
