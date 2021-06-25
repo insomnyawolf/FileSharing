@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Capitales.Controllers
+namespace FileSharing.Controllers
 {
     [ApiController]
     [Route("api/[controller]/")]
@@ -116,7 +116,7 @@ namespace Capitales.Controllers
 
             var fileStream = System.IO.File.Open(destination, FileMode.Open, FileAccess.Read, FileShare.Read);
 
-            return File(fileStream: fileStream, contentType: GetContentType(filename), enableRangeProcessing: true, fileDownloadName: filename); // returns a FileStreamResult
+            return File(fileStream: fileStream, contentType: GetContentType(filename), fileDownloadName: filename, enableRangeProcessing: true); // returns a FileStreamResult
         }
 
         private static string GetContentType(string filename)

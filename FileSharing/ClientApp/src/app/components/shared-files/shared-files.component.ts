@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, AfterViewInit, Inject, HostListener } from '@angular/core';
 import { PagedResult } from '../../models/PagedResult';
 import { SharedFile } from '../../models/sharedfile';
@@ -135,7 +135,6 @@ export class SharedFilesComponent implements OnInit, AfterViewInit {
       this.loadNextPage();
     }
   }
-
 
   loadNextPage(): void {
     this.searchQueryPage++;

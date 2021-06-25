@@ -1,4 +1,3 @@
-import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FileService } from '../../services/file.service';
 
@@ -47,9 +46,8 @@ export class UploadFileComponent implements OnInit {
     }
 
     this.fileService.uploadFiles(formData).subscribe(
-      (response: HttpResponse<any>) => {
+      (response: any) => {
         // Executed on sucess
-        const data: any = response.body;
         alert("Upload Sucess!");
       }
     );

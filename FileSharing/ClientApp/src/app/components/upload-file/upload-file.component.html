@@ -6,6 +6,6 @@
       <input type="file" (change)="handleFileInput($event.target.files)" multiple class="custom-file-input" />
       <label for="customFile" class="custom-file-label elipsis">{{ fileNames }}</label>
     </div>
-    <input type="submit" value="Submit" v-on:click="submit" class="btn btn-primary" />
+    <input type="submit" (click)="upload()" class="btn btn-primary" />
   </div>
 </div>

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Capitales.Controllers
+namespace FileSharing.Controllers
 {
     // Generic Processing Goes Here
     public abstract class BaseController : ControllerBase
