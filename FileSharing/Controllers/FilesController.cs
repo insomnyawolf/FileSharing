@@ -37,7 +37,16 @@ namespace Capitales.Controllers
             }
 
             var info = new DirectoryInfo(FilePath);
-            var files = info.GetFiles();
+
+            if (string.IsNullOrEmpty(filename))
+            {
+                filename = string.Empty;
+            }
+            else
+            {
+                filename = '*' + filename + '*';
+            }
+            var files = info.GetFiles(filename);
 
             // Sort by creation-time descending
             Array.Sort(files, (FileInfo f1, FileInfo f2) =>
