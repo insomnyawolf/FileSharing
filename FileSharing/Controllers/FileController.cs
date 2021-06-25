@@ -14,7 +14,7 @@ namespace Capitales.Controllers
 {
     [ApiController]
     [Route("api/[controller]/")]
-    public class FilesController : BaseController
+    public class FileController : BaseController
     {
         private static readonly FileExtensionContentTypeProvider FileExtensionContentTypeProvider = new FileExtensionContentTypeProvider();
         private static readonly char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
@@ -22,14 +22,14 @@ namespace Capitales.Controllers
         private readonly string FilePath;
         private readonly int MaxResults;
 
-        public FilesController(ILogger<FilesController> Logger) : base(Logger)
+        public FileController(ILogger<FileController> Logger) : base(Logger)
         {
             FilePath = ConfigurationManager.AppSettings.FilePath;
             MaxResults = ConfigurationManager.AppSettings.MaxResultsInIndex;
         }
 
-        [HttpGet(nameof(GetFileInfo))]
-        public PagedResult<SharedFileInfo> GetFileInfo(string filename = null, int page = 1)
+        [HttpGet(nameof(Info))]
+        public PagedResult<SharedFileInfo> Info(string filename = null, int page = 1)
         {
             if (page < 1)
             {
@@ -92,8 +92,8 @@ namespace Capitales.Controllers
             };
         }
 
-        [HttpGet(nameof(GetFile))]
-        public IActionResult GetFile([FromQuery] string filename = null)
+        [HttpGet(nameof(Get))]
+        public IActionResult Get([FromQuery] string filename = null)
         {
             if (string.IsNullOrEmpty(filename))
             {
@@ -118,7 +118,7 @@ namespace Capitales.Controllers
             return contentType ?? "application/octet-stream";
         }
 
-        [HttpPost]
+        [HttpPost(nameof(Upload))]
         [DisableRequestSizeLimit]
         public async Task<IActionResult> Upload()
         {

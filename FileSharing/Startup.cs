@@ -1,10 +1,12 @@
-#define DisableSPA
+//#define DisableSPA
 using FileSharing.Middleware;
 using FileSharing.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+#if !DisableSPA && DEBUG
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+#endif
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
