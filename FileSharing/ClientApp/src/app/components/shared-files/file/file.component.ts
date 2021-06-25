@@ -49,9 +49,7 @@ export class FileComponent implements OnInit {
     }
 
     this.fileUrl = `${this.apiUrl}/File/Download?filename=${this.file.url}`;
-    console.log(this.fileUrl);
   }
-
 }
 
 

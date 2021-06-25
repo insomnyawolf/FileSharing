@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Component, OnInit, AfterViewInit, Inject } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Inject, HostListener } from '@angular/core';
 import { PagedResult } from '../../models/PagedResult';
 import { SharedFile } from '../../models/sharedfile';
 import { FileService } from '../../services/file.service';
@@ -13,6 +13,10 @@ import { FileService } from '../../services/file.service';
 export class SharedFilesComponent implements OnInit, AfterViewInit {
   private fileService: FileService;
   private document: Document;
+
+  private loadingNextPage: boolean;
+  private furtestScroll: number;
+  private noMoreResultsAvailable: boolean;
 
   previewEnabled: boolean;
   files: SharedFile[];
@@ -35,12 +39,12 @@ export class SharedFilesComponent implements OnInit, AfterViewInit {
     this.previewEnabled = previewEnabled === 'true';
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.refresh();
   }
 
   // Need to guess the kind of this event
-  changeSearch(targetElement) {
+  changeSearch(targetElement): void {
     const newValue = targetElement.target.value;
 
     if (this.searchQueryFilename === newValue) {
@@ -49,19 +53,17 @@ export class SharedFilesComponent implements OnInit, AfterViewInit {
     }
 
     this.searchQueryFilename = newValue;
-    this.searchQueryPage = 1;
     this.refresh();
-
   }
 
   // Need to guess the kind of this event
-  togglePreview(targetElement) {
+  togglePreview(targetElement): void {
     this.previewEnabled = targetElement.target.checked;
     localStorage.setItem('previewEnabled', `${this.previewEnabled}`);
   }
 
   // Doesn't work yet
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     const videoElements = document.getElementsByTagName('video');
 
     for (let i = 0; i < videoElements.length; i++) {
@@ -79,17 +81,72 @@ export class SharedFilesComponent implements OnInit, AfterViewInit {
     console.log('Volument Seteado');
   }
 
+  refresh(): void {
+    this.searchQueryPage = 1;
+    this.loadingNextPage = false;
+    this.furtestScroll = 0;
+    this.noMoreResultsAvailable = false;
 
-  scrollTop() {
-    this.document.documentElement.scrollTop = 0;
-  }
-
-  refresh() {
     this.fileService.getFileInfo(this.searchQueryFilename, this.searchQueryPage).subscribe(
       (response: PagedResult<SharedFile>) => {
         // Executed on sucess
         this.files = response.content;
-        console.table(this.files);
+      },
+      (error: HttpErrorResponse) => {
+        // Executed on error
+      },
+      () => {
+        // Always Executed
+      }
+    );
+  }
+
+  scrollTop(): void {
+    this.document.documentElement.scrollTop = 0;
+  }
+
+  @HostListener('window:scroll')
+  onWindowScroll(): void {
+    const currentScrollTopPosition = this.document.documentElement.scrollTop;
+    const maxScrollHeight = this.document.documentElement.scrollHeight;
+
+    if (this.furtestScroll > currentScrollTopPosition && this.furtestScroll !== maxScrollHeight) {
+      // Do nothing
+      return;
+    }
+
+    if (this.noMoreResultsAvailable) {
+      // Do nothing
+      return;
+    }
+
+    if (this.loadingNextPage) {
+      // Do nothing
+      return;
+    }
+
+    this.furtestScroll = currentScrollTopPosition;
+
+    const viewSize = this.document.documentElement.clientHeight;
+
+    const loadNewPagePosition = maxScrollHeight - (viewSize * 1.3);
+    if (currentScrollTopPosition > loadNewPagePosition) {
+      this.loadingNextPage = true;
+      this.loadNextPage();
+    }
+  }
+
+
+  loadNextPage(): void {
+    this.searchQueryPage++;
+    this.fileService.getFileInfo(this.searchQueryFilename, this.searchQueryPage).subscribe(
+      (response: PagedResult<SharedFile>) => {
+        // Executed on sucess
+        if (response.totalPages === this.searchQueryPage) {
+          this.noMoreResultsAvailable = true;
+        }
+        this.files = this.files.concat(response.content);
+        this.loadingNextPage = false;
       },
       (error: HttpErrorResponse) => {
         // Executed on error

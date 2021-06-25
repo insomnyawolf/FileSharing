@@ -1,4 +1,4 @@
 export class PagedResult<T> {
-  totalPages: string;
+  totalPages: number;
   content: T[];
 }
