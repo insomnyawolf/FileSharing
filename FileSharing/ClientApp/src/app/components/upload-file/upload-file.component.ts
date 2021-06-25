@@ -1,4 +1,6 @@
+import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { FileService } from '../../services/file.service';
 
 @Component({
   selector: 'app-upload-file',
@@ -6,8 +8,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./upload-file.component.css']
 })
 export class UploadFileComponent implements OnInit {
-
-  constructor() { }
+  private fileService: FileService;
+  constructor(fileService: FileService) {
+    this.fileService = fileService;
+  }
 
   ngOnInit() {
   }
@@ -17,22 +21,22 @@ export class UploadFileComponent implements OnInit {
       // Do nothing as there are no files to upload
       return;
     }
-    const endpoint = 'your-destination-url';
+
     const formData: FormData = new FormData();
 
-    for (var i = 0; i < files.length; i++) {
+    for (let i = 0; i < files.length; i++) {
 
-      // get item
       const file = files.item(i);
 
       formData.append('fileKey', file, file.name);
     }
 
-    
-    
-    return this.httpClient
-      .post(endpoint, formData, { headers: yourHeadersConfig })
-      .map(() => { return true; })
-      .catch((e) => this.handleError(e));
+    this.fileService.uploadFiles(formData).subscribe(
+      (response: HttpResponse<any>) => {
+        // Executed on sucess
+        const data: any = response.body;
+        alert("Upload Sucess!");
+      }
+    )
   }
 }

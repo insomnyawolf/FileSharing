@@ -7,4 +7,4 @@ var SharedFile = /** @class */ (function () {
     return SharedFile;
 }());
 exports.SharedFile = SharedFile;
-//# sourceMappingURL=sharedfile.js.map
+//# sourceMappingURL=SharedFile.js.map

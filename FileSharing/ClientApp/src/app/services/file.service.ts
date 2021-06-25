@@ -8,11 +8,12 @@ import { SharedFile } from '../models/sharedfile';
 @Injectable({
   providedIn: 'root'
 })
-export class FileServiceService {
+export class FileService {
   private apiUrl: string;
-  private http: HttpClient;
-  constructor(http: HttpClient, @Inject('API_URL') baseUrl: string)
+  private httpClient: HttpClient;
+  constructor(httpClient: HttpClient, @Inject('API_URL') baseUrl: string)
   {
+    this.httpClient = httpClient;
     this.apiUrl = baseUrl + '/Files';
   }
 
@@ -22,6 +23,10 @@ export class FileServiceService {
     params.set('filename', filename);
     params.set('page', pageNumber.toString());
 
-    return this.http.get<PagedResult<SharedFile>>(this.apiUrl + '/GetFileInfo', { params });
+    return this.httpClient.get<PagedResult<SharedFile>>(this.apiUrl + '/Info', { params });
+  }
+
+  uploadFiles(formData: FormData): Observable<any> {
+    return this.httpClient.post(this.apiUrl + '/Upload', formData, { headers: undefined });
   }
 }

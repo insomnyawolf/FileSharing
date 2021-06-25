@@ -12,6 +12,7 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { UploadFileComponent } from './components/upload-file/upload-file.component';
 import { SharedFilesComponent } from './components/shared-files/shared-files.component';
 import { FileComponent } from './components/shared-files/file/file.component';
+import { FileService } from './services/file.service';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,9 @@ import { FileComponent } from './components/shared-files/file/file.component';
       { path: 'fetch-data', component: FetchDataComponent },
     ])
   ],
-  providers: [],
+  providers: [
+    FileService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
