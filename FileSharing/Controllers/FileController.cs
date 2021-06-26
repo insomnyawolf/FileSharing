@@ -25,8 +25,6 @@ namespace FileSharing.Controllers
             return FileExtensionContentTypeProvider;
         }
 
-        private static readonly char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
-        private static readonly string InvalidFileNameCharsString = string.Join(' ', InvalidFileNameChars);
         private readonly string FilePath = ConfigurationManager.AppSettings.FilePath;
         private readonly int MaxResults = ConfigurationManager.AppSettings.MaxResultsInIndex;
 
@@ -36,24 +34,26 @@ namespace FileSharing.Controllers
         }
 
         [HttpGet(nameof(Info))]
-        public PagedResult<SharedFileInfo> Info(string filename = null, int page = 1)
+        public PagedResult<SharedFileInfo> Info(string fileName = null, int page = 1)
         {
             if (page < 1)
             {
                 throw new BadRequestException($"'{nameof(page)}' should be greater than 0.");
             }
 
+
             var info = new DirectoryInfo(FilePath);
 
-            if (string.IsNullOrEmpty(filename))
+            if (string.IsNullOrEmpty(fileName))
             {
-                filename = string.Empty;
+                fileName = string.Empty;
             }
             else
             {
-                filename = '*' + filename + '*';
+                fileName = FileSystemProtection.ValidateFileName(fileName);
+                fileName = '*' + fileName + '*';
             }
-            var files = info.GetFiles(filename);
+            var files = info.GetFiles(fileName);
 
             // Sort by creation-time descending
             Array.Sort(files, (FileInfo f1, FileInfo f2) =>
@@ -100,14 +100,16 @@ namespace FileSharing.Controllers
         }
 
         [HttpGet(nameof(Download))]
-        public IActionResult Download([FromQuery] string filename = null)
+        public IActionResult Download([FromQuery] string fileName = null)
         {
-            if (string.IsNullOrEmpty(filename))
+            if (string.IsNullOrEmpty(fileName))
             {
-                throw new BadRequestException($"'{nameof(filename)}' can not be empty.");
+                throw new BadRequestException($"'{nameof(fileName)}' can not be empty.");
             }
 
-            var destination = Path.Combine(FilePath, filename);
+            fileName = FileSystemProtection.ValidateFileName(fileName);
+
+            var destination = Path.Combine(FilePath, fileName);
 
             if (!System.IO.File.Exists(destination))
             {
@@ -116,12 +118,12 @@ namespace FileSharing.Controllers
 
             var fileStream = System.IO.File.Open(destination, FileMode.Open, FileAccess.Read, FileShare.Read);
 
-            return File(fileStream: fileStream, contentType: GetContentType(filename), fileDownloadName: filename, enableRangeProcessing: true); // returns a FileStreamResult
+            return File(fileStream: fileStream, contentType: GetContentType(fileName), fileDownloadName: fileName, enableRangeProcessing: true); // returns a FileStreamResult
         }
 
         private static string GetContentType(string filename)
         {
-            if(!FileExtensionContentTypeProvider.TryGetContentType(filename, out string contentType))
+            if (!FileExtensionContentTypeProvider.TryGetContentType(filename, out string contentType))
             {
                 return "application/octet-stream";
             }
@@ -138,15 +140,11 @@ namespace FileSharing.Controllers
             {
                 var formFile = formFiles[i];
 
-#warning test this
-                if (formFile.FileName.IndexOfAny(InvalidFileNameChars) != -1)
-                {
-                    throw new BadRequestException($"The file '{formFile.FileName}' contains any of the following invalid characters => {InvalidFileNameCharsString}");
-                }
-
                 if (formFile.Length > 0)
                 {
-                    string dest = Path.Combine(FilePath, formFile.FileName);
+                    var fileName = FileSystemProtection.ValidateFileName(formFile.FileName);
+
+                    string dest = Path.Combine(FilePath, fileName);
 
                     if (System.IO.File.Exists(dest))
                     {

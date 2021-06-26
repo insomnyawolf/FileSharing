@@ -20,7 +20,7 @@ export class FileService {
   getFileInfo(filename: string, pageNumber: number): Observable<PagedResult<SharedFile>> {
 
     const params = new HttpParams()
-    .set('filename', filename)
+    .set('fileName', filename)
     .set('page', pageNumber.toString());
 
     return this.httpClient.get<PagedResult<SharedFile>>(this.apiUrl + '/Info', { params });
