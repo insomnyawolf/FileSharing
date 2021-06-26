@@ -118,7 +118,8 @@ namespace FileSharing.Controllers
 
             var fileStream = System.IO.File.Open(destination, FileMode.Open, FileAccess.Read, FileShare.Read);
 
-            return File(fileStream: fileStream, contentType: GetContentType(fileName), fileDownloadName: fileName, enableRangeProcessing: true); // returns a FileStreamResult
+            // returns a FileStreamResult without loading the whole file into memory
+            return File(fileStream: fileStream, contentType: GetContentType(fileName), fileDownloadName: fileName, enableRangeProcessing: true);
         }
 
         private static string GetContentType(string filename)
