@@ -3,7 +3,7 @@
     <div class="custom-file">
       <div class="preview" *ngIf="preview" [ngSwitch]="mediaType">
         <div class="visible-media-wrapper" *ngSwitchCase="multimediaType.Video">
-          <video controls preload="none" class="videoInsert">
+          <video controls preload="none">
             <source [src]="fileUrl">
             Your browser does not support the video element.
           </video>
