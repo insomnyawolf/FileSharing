@@ -10,6 +10,7 @@
 ## Known Issues
 
 * Search no showing correctly on phone
+* Infinite scroll weird behaviour on phone
 
 ## Fixed Issues
 
