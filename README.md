@@ -9,5 +9,8 @@
 
 ## Known Issues
 
-* Infinite scroll not working on phone
 * Search no showing correctly on phone
+
+## Fixed Issues
+
+* Infinite scroll not working on phone

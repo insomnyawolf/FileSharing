@@ -10,12 +10,11 @@ import { FileService } from '../../services/file.service';
   templateUrl: './shared-files.component.html',
   styleUrls: ['./shared-files.component.css']
 })
-export class SharedFilesComponent implements OnInit, AfterViewInit {
+export class SharedFilesComponent implements OnInit/*, AfterViewInit*/ {
   private fileService: FileService;
   private document: Document;
 
   private loadingNextPage: boolean;
-  private furtestScroll: number;
   private noMoreResultsAvailable: boolean;
 
   previewEnabled: boolean;
@@ -28,7 +27,6 @@ export class SharedFilesComponent implements OnInit, AfterViewInit {
     this.document = document;
 
     this.searchQueryFilename = '';
-    this.searchQueryPage = 1;
 
     let previewEnabled = localStorage.getItem('previewEnabled');
     if (previewEnabled === null) {
@@ -56,41 +54,25 @@ export class SharedFilesComponent implements OnInit, AfterViewInit {
     this.refresh();
   }
 
-  // Need to guess the kind of this event
-  togglePreview(targetElement): void {
-    this.previewEnabled = targetElement.target.checked;
-    localStorage.setItem('previewEnabled', `${this.previewEnabled}`);
-  }
-
-  // Doesn't work yet
-  ngAfterViewInit(): void {
-    const videoElements = document.getElementsByTagName('video');
-
-    for (let i = 0; i < videoElements.length; i++) {
-      const video = videoElements.item(i);
-      video.volume = 0.5;
-    }
-
-    const audioElements = document.getElementsByTagName('audio');
-
-    for (let i = 0; i < audioElements.length; i++) {
-      const audio = audioElements.item(i);
-      audio.volume = 0.5;
-    }
-
-    console.log('Volument Seteado');
-  }
-
   refresh(): void {
-    this.searchQueryPage = 1;
+    this.searchQueryPage = 0;
     this.loadingNextPage = false;
-    this.furtestScroll = 0;
     this.noMoreResultsAvailable = false;
+    this.files = new Array<SharedFile>();
 
+    this.loadNextPage();
+  }
+
+  loadNextPage(): void {
+    this.searchQueryPage++;
     this.fileService.getFileInfo(this.searchQueryFilename, this.searchQueryPage).subscribe(
       (response: PagedResult<SharedFile>) => {
         // Executed on sucess
-        this.files = response.content;
+        if (response.totalPages <= this.searchQueryPage) {
+          this.noMoreResultsAvailable = true;
+        }
+        this.files = this.files.concat(response.content);
+        this.loadingNextPage = false;
       },
       (error: HttpErrorResponse) => {
         // Executed on error
@@ -101,16 +83,46 @@ export class SharedFilesComponent implements OnInit, AfterViewInit {
     );
   }
 
+  // Need to guess the kind of this event
+  togglePreview(targetElement): void {
+    this.previewEnabled = targetElement.target.checked;
+    localStorage.setItem('previewEnabled', `${this.previewEnabled}`);
+  }
+
+  // Doesn't work yet
+  //ngAfterViewInit(): void {
+  //  const videoElements = document.getElementsByTagName('video');
+
+  //  for (let i = 0; i < videoElements.length; i++) {
+  //    const video = videoElements.item(i);
+  //    video.volume = 0.5;
+  //  }
+
+  //  const audioElements = document.getElementsByTagName('audio');
+
+  //  for (let i = 0; i < audioElements.length; i++) {
+  //    const audio = audioElements.item(i);
+  //    audio.volume = 0.5;
+  //  }
+
+  //  console.log('Volument Seteado');
+  //}
+
   scrollTop(): void {
     this.document.documentElement.scrollTop = 0;
   }
 
   @HostListener('window:scroll')
   onWindowScroll(): void {
+    const clientHeight = this.document.documentElement.clientHeight;
     const currentScrollTopPosition = this.document.documentElement.scrollTop;
+    const currentScrollBottomPosition = currentScrollTopPosition + clientHeight;
+
     const maxScrollHeight = this.document.documentElement.scrollHeight;
 
-    if (this.furtestScroll > currentScrollTopPosition && this.furtestScroll !== maxScrollHeight) {
+    // Phones Are Weird => I don't even know why this works
+    const loadNewPagePosition = maxScrollHeight - (clientHeight);
+    if (currentScrollBottomPosition < loadNewPagePosition) {
       // Do nothing
       return;
     }
@@ -125,34 +137,9 @@ export class SharedFilesComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.furtestScroll = currentScrollTopPosition;
+    // All validations ok here
 
-    const viewSize = this.document.documentElement.clientHeight;
-
-    const loadNewPagePosition = maxScrollHeight - (viewSize * 1.3);
-    if (currentScrollTopPosition > loadNewPagePosition) {
-      this.loadingNextPage = true;
-      this.loadNextPage();
-    }
-  }
-
-  loadNextPage(): void {
-    this.searchQueryPage++;
-    this.fileService.getFileInfo(this.searchQueryFilename, this.searchQueryPage).subscribe(
-      (response: PagedResult<SharedFile>) => {
-        // Executed on sucess
-        if (response.totalPages === this.searchQueryPage) {
-          this.noMoreResultsAvailable = true;
-        }
-        this.files = this.files.concat(response.content);
-        this.loadingNextPage = false;
-      },
-      (error: HttpErrorResponse) => {
-        // Executed on error
-      },
-      () => {
-        // Always Executed
-      }
-    );
+    this.loadingNextPage = true;
+    this.loadNextPage();
   }
 }
