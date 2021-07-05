@@ -17,10 +17,7 @@ namespace FileSharing.Helpers
 
             var target = AspectRatioResizeCalculator(originSize, MaxTargetSize, Upscale);
 
-
-            Origin.Mutate(x => x.Resize(target.Width, target.Height, KnownResamplers.Lanczos3));
-
-            
+            Origin.Mutate(x => x.Resize(target.Width, target.Height, KnownResamplers.Bicubic));
 
             return Origin;
         }
