@@ -1,7 +1,5 @@
-﻿
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
+﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 
 namespace FileSharing.Helpers
 {
@@ -9,9 +7,8 @@ namespace FileSharing.Helpers
     {
 
         // More info on https://stackoverflow.com/questions/11020710/is-graphics-drawimage-too-slow-for-bigger-images
-        public static Bitmap ResizeImage(Bitmap Origin, Size MaxTargetSize, bool Upscale)
+        public static Image ResizeImage(Image Origin, Size MaxTargetSize, bool Upscale)
         {
-
             var originSize = new Size
             {
                 Width = Origin.Width,
@@ -20,32 +17,12 @@ namespace FileSharing.Helpers
 
             var target = AspectRatioResizeCalculator(originSize, MaxTargetSize, Upscale);
 
-            var DestImage = new Bitmap(target.Width, target.Height);
 
-            using var Graphics = System.Drawing.Graphics.FromImage(DestImage);
-            Graphics.CompositingMode = CompositingMode.SourceCopy;
-            Graphics.CompositingQuality = CompositingQuality.HighQuality;
+            Origin.Mutate(x => x.Resize(target.Width, target.Height, KnownResamplers.Lanczos3));
 
-            // Quality
-            //Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            
 
-            // Balance
-            //Graphics.InterpolationMode = InterpolationMode.Bilinear;
-
-            // Speed
-            Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
-
-            Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-
-            using var ImageAttributes = new ImageAttributes();
-            ImageAttributes.SetWrapMode(WrapMode.TileFlipXY);
-
-            var destRect = new Rectangle(0, 0, DestImage.Width, DestImage.Height);
-
-            Graphics.DrawImage(Origin, destRect, 0, 0, Origin.Width, Origin.Height, GraphicsUnit.Pixel, ImageAttributes);
-
-            return DestImage;
+            return Origin;
         }
 
         private static Size AspectRatioResizeCalculator(Size Origin, Size Target, bool Upscale = false)

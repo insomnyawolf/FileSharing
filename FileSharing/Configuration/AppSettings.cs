@@ -19,5 +19,6 @@
         public int MaxHeight { get; set; }
         public int MaxWidth { get; set; }
         public bool Upscale { get; set; }
+        public int MaxColors { get; set; }
     }
 }

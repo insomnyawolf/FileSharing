@@ -1,9 +1,10 @@
 ﻿using FileSharing.Configuration;
 using FileSharing.Helpers;
 using System;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.Processing.Processors.Quantization;
 
 namespace FileSharing.Services
 {
@@ -63,7 +64,7 @@ namespace FileSharing.Services
 
         private static void GenerateImagePreview(string originFilePath, string targetPath, CacheSettings settings)
         {
-            using var image = new Bitmap(originFilePath);
+            using var image = Image.Load(originFilePath);
 
             var maxSize = new Size
             {
@@ -73,8 +74,18 @@ namespace FileSharing.Services
 
             using var result = ImageResizer.ResizeImage(image, maxSize, settings.Image.Upscale);
 
-#warning To Do Investigate encoder settings to achive greater compression
-            result.Save(targetPath, ImageFormat.Png);
+            var pngEncoder = new PngEncoder()
+            {
+                BitDepth = PngBitDepth.Bit8,
+                CompressionLevel = PngCompressionLevel.BestCompression,
+                ColorType = PngColorType.Palette,
+                Quantizer = new WuQuantizer(new QuantizerOptions()
+                {
+                    MaxColors = settings.Image.MaxColors
+                }),
+            };
+
+            result.Save(targetPath, pngEncoder);
         }
     }
 }
