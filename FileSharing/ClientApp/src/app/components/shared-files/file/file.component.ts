@@ -18,10 +18,12 @@ export class FileComponent implements OnInit {
 
   @Input()
   file: SharedFile;
+
   @Input()
   preview: boolean;
 
   fileUrl: string;
+  previewUrl: string;
 
   mediaType: MultimediaType;
   multimediaType: typeof MultimediaType = MultimediaType;
@@ -48,7 +50,8 @@ export class FileComponent implements OnInit {
         break;
     }
 
-    this.fileUrl = `${this.apiUrl}/File/Download?filename=${this.file.url}`;
+    this.fileUrl = `${this.apiUrl}/File/Download?filename=${this.file.url}&preview=${false}`;
+    this.previewUrl = `${this.apiUrl}/File/Download?filename=${this.file.url}&preview=${true}`;
   }
 }
 

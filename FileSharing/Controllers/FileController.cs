@@ -2,6 +2,7 @@
 using FileSharing.Helpers;
 using FileSharing.Middleware.CustomExceptions;
 using FileSharing.Models;
+using FileSharing.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Logging;
@@ -16,17 +17,8 @@ namespace FileSharing.Controllers
     [Route("api/[controller]/")]
     public class FileController : BaseController
     {
-        private static readonly FileExtensionContentTypeProvider FileExtensionContentTypeProvider = InitializeFileExtensionContentTypeProvider();
-
-        private static FileExtensionContentTypeProvider InitializeFileExtensionContentTypeProvider()
-        {
-            var FileExtensionContentTypeProvider = new FileExtensionContentTypeProvider();
-            FileExtensionContentTypeProvider.Mappings.Add(".flac", "audio/flac");
-            return FileExtensionContentTypeProvider;
-        }
-
         private readonly string FilePath = ConfigurationManager.AppSettings.FilePath;
-        private readonly int MaxResults = ConfigurationManager.AppSettings.MaxResultsInIndex;
+        private readonly int MaxResults = ConfigurationManager.AppSettings.MaxResultsPerPage;
 
         public FileController(ILogger<FileController> Logger) : base(Logger)
         {
@@ -50,7 +42,7 @@ namespace FileSharing.Controllers
             }
             else
             {
-                fileName = FileSystemProtection.ValidateFileName(fileName);
+                fileName = FileSystemProtectionHelper.ValidateFileName(fileName);
                 fileName = '*' + fileName + '*';
             }
             var files = info.GetFiles(fileName);
@@ -89,7 +81,7 @@ namespace FileSharing.Controllers
                     Name = files[i].Name,
                     Date = files[i].CreationTimeUtc,
                     Size = files[i].Length,
-                    ContentType = GetContentType(files[i].Name),
+                    ContentType = ContentTypeHelper.GetString(files[i].Name),
                 });
             }
 
@@ -100,14 +92,14 @@ namespace FileSharing.Controllers
         }
 
         [HttpGet(nameof(Download))]
-        public IActionResult Download([FromQuery] string fileName = null)
+        public IActionResult Download([FromQuery] string fileName = null, bool preview = false)
         {
             if (string.IsNullOrEmpty(fileName))
             {
                 throw new BadRequestException($"'{nameof(fileName)}' can not be empty.");
             }
 
-            fileName = FileSystemProtection.ValidateFileName(fileName);
+            fileName = FileSystemProtectionHelper.ValidateFileName(fileName);
 
             var destination = Path.Combine(FilePath, fileName);
 
@@ -116,19 +108,18 @@ namespace FileSharing.Controllers
                 return NotFound();
             }
 
+            var contentType = ContentTypeHelper.GetString(fileName);
+
+            if (preview && PreviewService.TryGetPreview(destination, contentType, out var previewPath, out var previewContentType))
+            {
+                destination = previewPath;
+                contentType = previewContentType;
+            }
+
             var fileStream = System.IO.File.Open(destination, FileMode.Open, FileAccess.Read, FileShare.Read);
 
             // returns a FileStreamResult without loading the whole file into memory
-            return File(fileStream: fileStream, contentType: GetContentType(fileName), fileDownloadName: fileName, enableRangeProcessing: true);
-        }
-
-        private static string GetContentType(string filename)
-        {
-            if (!FileExtensionContentTypeProvider.TryGetContentType(filename, out string contentType))
-            {
-                return "application/octet-stream";
-            }
-            return contentType;
+            return File(fileStream: fileStream, contentType: contentType, fileDownloadName: fileName, enableRangeProcessing: true);
         }
 
         [HttpPost(nameof(Upload))]
@@ -143,7 +134,7 @@ namespace FileSharing.Controllers
 
                 if (formFile.Length > 0)
                 {
-                    var fileName = FileSystemProtection.ValidateFileName(formFile.FileName);
+                    var fileName = FileSystemProtectionHelper.ValidateFileName(formFile.FileName);
 
                     string dest = Path.Combine(FilePath, fileName);
 

@@ -11,16 +11,16 @@ namespace FileSharing.Configuration
         {
             ConfigurationManager.Configuration = Configuration;
 
-            ConfigurationReloadManager(null);
+            ConfigurationReloadManager();
         }
 
-        private static void ConfigurationReloadManager(object state)
+        private static void ConfigurationReloadManager(object state = null)
         {
             // Reload The Config
             AppSettings = Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
 
             // Reregister the change listener
-            Configuration.GetReloadToken().RegisterChangeCallback(ConfigurationReloadManager, null);
+            Configuration.GetReloadToken().RegisterChangeCallback(ConfigurationReloadManager, state);
         }
     }
 }

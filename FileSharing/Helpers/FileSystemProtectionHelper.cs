@@ -3,7 +3,7 @@ using System.IO;
 
 namespace FileSharing.Helpers
 {
-    public static class FileSystemProtection
+    public static class FileSystemProtectionHelper
     {
         private static readonly char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
         private static readonly string InvalidFileNameCharsString = string.Join(' ', InvalidFileNameChars);
