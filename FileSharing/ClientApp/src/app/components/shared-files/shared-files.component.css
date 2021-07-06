@@ -1,17 +1,24 @@
-div.card-border {
-  border: 1px solid;
-  border-radius: 3px;
+div.search {
+  display: inline-block;
+  margin: 10px;
+}
+
+div.search {
+  display: inline-block;
+  margin: 10px;
+}
+
+div.search-container {
+  display: flex;
+  flex-flow: wrap;
+  justify-content: center;
+  align-items: center;
 }
 
 div.dynamic-table-container {
   display: flex;
   flex-flow: wrap;
 }
-
-    div.dynamic-table-container > div.cell > * {
-      width: 100%;
-      height: 100%;
-    }
 
 button.go-top-button {
     position: fixed;
@@ -22,20 +29,3 @@ button.go-top-button {
     border-radius: 5px;
     cursor: pointer;
 }
-
-div.search {
-    display:inline-block;
-    margin: 10px;
-}
-
-div.search {
-  display: inline-block;
-  margin: 10px;
-}
-
-div.search-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-

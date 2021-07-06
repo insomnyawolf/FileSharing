@@ -3,9 +3,9 @@
   <div class="card-body">
     <h5 class="card-title">Upload File</h5>
     <div class="custom-file">
-      <input type="file" (change)="handleFileInput($event.target.files)" multiple class="custom-file-input" />
+      <input type="file" (change)="handleFileInput($event.target.files)" multiple class="custom-file-input m-1" />
       <label for="customFile" class="custom-file-label elipsis">{{ fileNames }}</label>
     </div>
-    <input type="submit" (click)="upload()" class="btn btn-primary" />
+    <input type="submit" (click)="upload()" class="btn btn-primary m-1" />
   </div>
 </div>

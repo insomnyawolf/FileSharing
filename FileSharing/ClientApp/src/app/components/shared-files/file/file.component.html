@@ -1,28 +1,24 @@
-<div class="card-border">
-  <div class="card-body">
-    <div class="custom-file">
-      <div class="preview" *ngIf="preview" [ngSwitch]="mediaType">
-        <div class="visible-media-wrapper" *ngSwitchCase="multimediaType.Video">
-          <video controls preload="none">
-            <source [src]="previewUrl">
-            Your browser does not support the video element.
-          </video>
-        </div>
-        <div class="audio-wrapper" *ngSwitchCase="multimediaType.Audio">
-          <audio controls preload="none">
-            <source [src]="previewUrl">
-            Your browser does not support the audio element.
-          </audio>
-        </div>
-        <div class="visible-media-wrapper" *ngSwitchCase="multimediaType.Image">
-          <img [src]="previewUrl" loading="lazy" />
-        </div>
-      </div>
-      
-      <p>Link: <a [href]="fileUrl" target="blank">{{file.name}}</a></p>
-      <p>Date: {{file.date}}</p>
-      <p>Size: {{file.size}}</p>
-      <p>ContentType: {{file.contentType}}</p>
+<div class="card-body">
+  <div class="preview" *ngIf="preview" [ngSwitch]="mediaType">
+    <div class="visible-media-wrapper" *ngSwitchCase="multimediaType.Video">
+      <video controls preload="none">
+        <source [src]="previewUrl">
+        Your browser does not support the video element.
+      </video>
+    </div>
+    <div class="audio-wrapper" *ngSwitchCase="multimediaType.Audio">
+      <audio controls preload="none">
+        <source [src]="previewUrl">
+        Your browser does not support the audio element.
+      </audio>
+    </div>
+    <div class="visible-media-wrapper" *ngSwitchCase="multimediaType.Image">
+      <img [src]="previewUrl" loading="lazy" />
     </div>
   </div>
+
+  <p>Link: <a [href]="fileUrl" target="blank">{{file.name}}</a></p>
+  <p>Date: {{file.date}}</p>
+  <p>Size: {{file.size}}</p>
+  <p>ContentType: {{file.contentType}}</p>
 </div>
