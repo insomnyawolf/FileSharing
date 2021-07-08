@@ -22,7 +22,6 @@
     "@angular/platform-server": "12.1.0",
     "@angular/router": "12.1.0",
     "@auth0/angular-jwt": "^5.0.2",
-    "bootstrap": "^4.6.0",
     "core-js": "^3.8.3",
     "jquery": "^3.5.1",
     "oidc-client": "^1.11.3",
