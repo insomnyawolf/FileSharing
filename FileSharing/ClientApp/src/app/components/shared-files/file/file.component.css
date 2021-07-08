@@ -16,6 +16,7 @@ div.visible-media-wrapper {
   }
 
   div.visible-media-wrapper > img {
+      display: block;
   }
 
   div.visible-media-wrapper > video {

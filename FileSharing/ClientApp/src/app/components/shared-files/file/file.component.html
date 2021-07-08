@@ -1,7 +1,5 @@
 <div class="card">
-  <div class="card-header">
-    <a [href]="fileUrl" target="blank">{{file.name}}</a>
-  </div>
+  <!--<div class="card-header"></div>-->
   <div class="card-body">
     <div class="preview" *ngIf="preview" [ngSwitch]="mediaType">
       <div class="visible-media-wrapper" *ngSwitchCase="multimediaType.Video">
@@ -20,12 +18,12 @@
         </audio>
       </div>
     </div>
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item">Link: </li>
-      <li class="list-group-item">Size: {{file.size}}</li>
-      <li class="list-group-item">ContentType: {{file.contentType}}</li>
-    </ul>
   </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">Download: <a [href]="fileUrl" target="blank">{{file.name}}</a></li>
+    <li class="list-group-item">Size: {{file.size}}</li>
+    <li class="list-group-item">ContentType: {{file.contentType}}</li>
+  </ul>
   <div class="card-footer">
     <small class="text-muted">Last Updated: {{file.date}}</small>
   </div>
