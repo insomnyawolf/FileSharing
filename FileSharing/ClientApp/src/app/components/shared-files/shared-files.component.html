@@ -11,7 +11,7 @@
   <h2 *ngIf="files === undefined || files.length == 0">Nothing but dust here</h2>
 
   <div class="dynamic-table-container">
-    <app-file [file]="file" [preview]="previewEnabled" *ngFor="let file of files" class="cell card search col-12 m-1"></app-file>
+    <app-file [file]="file" [preview]="previewEnabled" *ngFor="let file of files" class="col-12 m-1"></app-file>
     <button (click)="scrollTop()" class="go-top-button">Go back to the begining</button>
   </div>
 </div>

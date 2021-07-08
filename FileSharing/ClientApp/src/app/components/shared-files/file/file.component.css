@@ -1,9 +1,6 @@
-div.audio-wrapper {
+div.preview {
+  margin: 0 auto;
 }
-
-  div.audio-wrapper > audio {
-    width: 100%;
-  }
 
 div.visible-media-wrapper {
   height: 50vh;
@@ -15,6 +12,7 @@ div.visible-media-wrapper {
     width: auto;
     height: 100%;
     object-fit: contain;
+    margin: 0 auto;
   }
 
   div.visible-media-wrapper > img {
@@ -22,3 +20,11 @@ div.visible-media-wrapper {
 
   div.visible-media-wrapper > video {
   }
+
+div.audio-wrapper {
+}
+
+  div.audio-wrapper > audio {
+    width: 100%;
+  }
+
