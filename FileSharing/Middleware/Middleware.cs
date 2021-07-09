@@ -26,21 +26,31 @@ namespace FileSharing.Middleware
             }
             catch (Exception ex)
             {
-                Logger.LogError(exception: ex, "Uncaught Exception");
+
 
                 var response = context.Response;
                 response.ContentType = "application/json";
 
                 // Creds to https://jasonwatmore.com/post/2020/10/02/aspnet-core-31-global-error-handler-tutorialW
 
-                var statusCode = ex switch
+                HttpStatusCode statusCode;
+                switch (ex)
                 {
-                    UnauthorizedException _ => HttpStatusCode.Unauthorized,
+                    case UnauthorizedException:
+                        Logger.LogWarning(ex.Message, nameof(UnauthorizedException));
+                        statusCode = HttpStatusCode.Unauthorized;
+                        break;
                     // Peticiones Malformadas
-                    BadRequestException _ => HttpStatusCode.BadRequest,
+                    case BadRequestException:
+                        Logger.LogWarning(ex.Message, nameof(BadRequestException));
+                        statusCode = HttpStatusCode.BadRequest;
+                        break;
                     // Errores no controlados
-                    _ => HttpStatusCode.InternalServerError,
-                };
+                    default:
+                        Logger.LogError(exception: ex, "Uncaught Exception");
+                        statusCode = HttpStatusCode.InternalServerError;
+                        break;
+                }
 
                 response.StatusCode = (int)statusCode;
 

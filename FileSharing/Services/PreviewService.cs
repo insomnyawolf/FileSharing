@@ -12,7 +12,7 @@ namespace FileSharing.Services
     {
         public static bool TryGetPreview(string path, string contentType, out string previewPath, out string previewContentType)
         {
-            contentType = contentType.Split('/', StringSplitOptions.RemoveEmptyEntries)[0].ToLower();
+            previewContentType = contentType.Split('/', StringSplitOptions.RemoveEmptyEntries)[0].ToLower();
 
             var fileInfo = new FileInfo(path);
 
@@ -36,7 +36,7 @@ namespace FileSharing.Services
                 Directory.CreateDirectory(cacheSettings.PreviewPath);
             }
 
-            switch (contentType)
+            switch (previewContentType)
             {
                 case "image":
                     previewPath = GetCacheName(cacheSettings, fileInfo.Name, "png");
