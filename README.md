@@ -4,13 +4,17 @@
 
 * Fix known issues (see below)
 * ContentType filter option on search
-* Drag & Drop upload
-* List files which will be uploaded and let the user cancell some of them
+* Download previewed video/audio if it was already preloaded into the client computer as those are the original files already
+* Make the download button more obvious (thanks Loluh)
+* Remake Upload
+  * Drag & Drop upload
+  * List files which will be uploaded and let the user cancell some of them
 * You tell me
 
 ## Known Issues
 
-* Infinite scroll weird behaviour on phone
+* Infinite scroll weird behaviour on phone 
+* Upload on large files is failing currently
 
 ## Fixed Issues
 
